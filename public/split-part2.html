@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Split Audio - Part 2</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .split-container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        .upload-section {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+        }
+        .timestamp-inputs {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        .timestamp-item {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            border: 2px solid #e0e0e0;
+        }
+        .timestamp-item h4 {
+            color: #667eea;
+            margin-bottom: 15px;
+        }
+        .time-input-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        .time-input-group label {
+            min-width: 80px;
+            font-weight: 600;
+            color: #555;
+        }
+        .time-input-group input {
+            flex: 1;
+            padding: 8px;
+            border: 2px solid #e0e0e0;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+        .time-input-group input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        .duration-display {
+            color: #666;
+            font-size: 12px;
+            margin-top: 5px;
+        }
+        .split-btn {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 30px;
+            width: 100%;
+            transition: all 0.3s;
+        }
+        .split-btn:hover:not(:disabled) {
+            background: #218838;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(40, 167, 69, 0.3);
+        }
+        .split-btn:disabled {
+            background: #6c757d;
+            cursor: not-allowed;
+        }
+        .progress-section {
+            display: none;
+            background: #e7f3ff;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            text-align: center;
+        }
+        .progress-section.active {
+            display: block;
+        }
+        .result-section {
+            display: none;
+            background: #d4edda;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+        .result-section.active {
+            display: block;
+        }
+        .result-files {
+            margin-top: 15px;
+        }
+        .result-file-item {
+            background: white;
+            padding: 10px;
+            border-radius: 6px;
+            margin-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .audio-preview {
+            margin-top: 20px;
+        }
+        .get-duration-btn {
+            background: #17a2b8;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-top: 10px;
+            font-weight: 600;
+        }
+        .get-duration-btn:hover {
+            background: #138496;
+        }
+    </style>
+</head>
+<body>
+    <div class="container split-container">
+        <a href="index.html" class="back-link">← Quay lại trang chủ</a>
+        
+        <h1>Split Audio - Part 2</h1>
+        
+        <div class="instructions">
+            <p><strong>Hướng dẫn:</strong></p>
+            <p>1. Upload file audio Part 2 của bạn</p>
+            <p>2. Nghe audio và nhập thời gian bắt đầu/kết thúc cho từng câu (25 câu)</p>
+            <p>3. Nhấn "Cắt Audio" để tạo 25 file riêng biệt</p>
+            <p>4. Các file sẽ được lưu vào thư mục <code>audio/part2</code></p>
+        </div>
+
+        <div class="upload-section">
+            <h2>1. Upload Audio File</h2>
+            <input type="file" id="audioFile" accept="audio/*" style="margin-top: 15px;">
+            <button class="get-duration-btn" id="getDurationBtn" style="display: none;">Lấy thời lượng audio</button>
+            <div id="audioDuration" style="margin-top: 10px; font-weight: 600; color: #667eea;"></div>
+            
+            <div class="audio-preview" id="audioPreview" style="display: none;">
+                <audio id="audioPlayer" controls style="width: 100%; margin-top: 15px;"></audio>
+            </div>
+        </div>
+
+        <div class="upload-section">
+            <h2>2. Chọn phương thức cắt</h2>
+            
+            <div style="display: flex; gap: 15px; margin-bottom: 20px;">
+                <button class="btn btn-primary" id="autoModeBtn" style="flex: 1; padding: 15px; font-size: 16px;">
+                    🤖 Chế độ tự động
+                </button>
+                <button class="btn btn-secondary" id="manualModeBtn" style="flex: 1; padding: 15px; font-size: 16px;">
+                    ✏️ Chế độ thủ công
+                </button>
+            </div>
+            
+            <div id="manualSection" style="display: none;">
+                <p style="color: #666; margin-bottom: 15px;">Định dạng: MM:SS hoặc SS (ví dụ: 00:05 hoặc 5)</p>
+                
+                <div class="timestamp-inputs" id="timestampInputs">
+                    <!-- Timestamp inputs will be generated here -->
+                </div>
+                
+                <button class="split-btn" id="splitBtn" disabled>Cắt Audio</button>
+            </div>
+            
+            <div id="autoSection" style="display: block;">
+                <div style="background: #e7f3ff; padding: 15px; border-radius: 10px; margin-bottom: 20px;">
+                    <p><strong>ℹ️ Tự động cắt:</strong> Hệ thống sẽ tự động phát hiện khoảng lặng giữa các câu và cắt thành 25 file.</p>
+                    <p style="margin-top: 10px; color: #666;">Nhấn nút bên dưới để bắt đầu tự động cắt.</p>
+                </div>
+                <button class="split-btn" id="autoSplitBtn">🤖 Tự động cắt Audio</button>
+            </div>
+            
+            <div class="progress-section" id="progressSection">
+                <p>Đang xử lý... Vui lòng đợi</p>
+            </div>
+            
+            <div class="result-section" id="resultSection">
+                <h3 style="color: #155724; margin-bottom: 15px;">✅ Cắt audio thành công!</h3>
+                <div class="result-files" id="resultFiles"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/split-part2.js"></script>
+</body>
+</html>

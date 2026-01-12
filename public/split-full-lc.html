@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Split Full LC Audio</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .split-container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        .upload-section {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+        }
+        .split-btn {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 30px;
+            width: 100%;
+            transition: all 0.3s;
+        }
+        .split-btn:hover:not(:disabled) {
+            background: #218838;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(40, 167, 69, 0.3);
+        }
+        .split-btn:disabled {
+            background: #6c757d;
+            cursor: not-allowed;
+        }
+        .progress-section {
+            display: none;
+            background: #e7f3ff;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            text-align: center;
+        }
+        .progress-section.active {
+            display: block;
+        }
+        .result-section {
+            display: none;
+            background: #d4edda;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+        .result-section.active {
+            display: block;
+        }
+        .part-results {
+            margin-top: 20px;
+        }
+        .part-result {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            border-left: 4px solid #667eea;
+        }
+        .part-result h4 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+        .file-count {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container split-container">
+        <a href="index.html" class="back-link">← Quay lại trang chủ</a>
+        
+        <h1>Split Full LC Audio</h1>
+        
+        <div class="instructions">
+            <p><strong>Hướng dẫn:</strong></p>
+            <p>1. Upload file audio full Listening Comprehension (LC)</p>
+            <p>2. Hệ thống sẽ tự động cắt thành Part 1, 2, 3, 4</p>
+            <p>3. Mỗi part sẽ được cắt thành các câu riêng biệt</p>
+            <p>4. Thông tin sẽ được lưu vào file JSON metadata</p>
+        </div>
+
+        <div class="upload-section">
+            <h2>Upload Full LC Audio</h2>
+            <input type="file" id="audioFile" accept="audio/*" style="margin-top: 15px;">
+            <div id="audioDuration" style="margin-top: 10px; font-weight: 600; color: #667eea;"></div>
+            
+            <div class="audio-preview" id="audioPreview" style="display: none;">
+                <audio id="audioPlayer" controls style="width: 100%; margin-top: 15px;"></audio>
+            </div>
+        </div>
+
+        <div class="upload-section">
+            <button class="split-btn" id="splitBtn" disabled>🚀 Cắt Full LC Audio</button>
+            
+            <div class="progress-section" id="progressSection">
+                <p>Đang xử lý... Vui lòng đợi (quá trình này có thể mất vài phút)</p>
+            </div>
+            
+            <div class="result-section" id="resultSection">
+                <h3 style="color: #155724; margin-bottom: 15px;">✅ Cắt audio thành công!</h3>
+                <div class="part-results" id="partResults"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/split-full-lc.js"></script>
+</body>
+</html>

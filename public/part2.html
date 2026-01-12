@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Part 2 - TOEIC Dictation</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="container dictation-container">
+        <a href="index.html" class="back-link">← Quay lại trang chủ</a>
+        
+        <h1>Part 2: Question-Response</h1>
+        
+        <div class="instructions">
+            <p><strong>Hướng dẫn:</strong></p>
+            <p>1. Chọn file audio để nghe</p>
+            <p>2. Nghe và nhập text vào ô bên dưới</p>
+            <p>3. Sử dụng các nút điều khiển để play/pause/stop audio</p>
+        </div>
+
+        <div class="audio-controls">
+            <h2>Audio Player</h2>
+            <div class="audio-file-input">
+                <label for="audioSelect" style="display: block; margin-bottom: 10px; font-weight: 600;">Chọn file từ thư mục audio:</label>
+                <select id="audioSelect" style="width: 100%; max-width: 400px; padding: 10px; border: 2px solid #667eea; border-radius: 8px; font-size: 14px; margin-bottom: 15px;">
+                    <option value="">-- Đang tải... --</option>
+                </select>
+                <label for="audioFile" style="display: block; margin-bottom: 10px; font-weight: 600;">Hoặc upload file từ máy tính:</label>
+                <input type="file" id="audioFile" accept="audio/*">
+            </div>
+            <div class="audio-player">
+                <audio id="audioPlayer" controls></audio>
+            </div>
+            <div class="control-buttons">
+                <button class="btn btn-primary" id="playBtn">▶ Play</button>
+                <button class="btn btn-secondary" id="pauseBtn">⏸ Pause</button>
+                <button class="btn btn-secondary" id="stopBtn">⏹ Stop</button>
+                <button class="btn btn-success" id="resetBtn">🔄 Reset</button>
+            </div>
+        </div>
+
+        <div class="text-input-area">
+            <div class="question-section">
+                <label for="question">Câu hỏi:</label>
+                <input type="text" id="question" placeholder="Nhập câu hỏi...">
+            </div>
+            <h3>Nhập 3 đáp án bạn nghe được:</h3>
+            <div class="answer-inputs">
+                <div class="answer-item">
+                    <label for="answerA">A.</label>
+                    <input type="text" id="answerA" placeholder="Nhập đáp án A...">
+                </div>
+                <div class="answer-item">
+                    <label for="answerB">B.</label>
+                    <input type="text" id="answerB" placeholder="Nhập đáp án B...">
+                </div>
+                <div class="answer-item">
+                    <label for="answerC">C.</label>
+                    <input type="text" id="answerC" placeholder="Nhập đáp án C...">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/app.js"></script>
+</body>
+</html>

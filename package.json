@@ -1,0 +1,16 @@
+{
+  "name": "toeic-dictation",
+  "version": "1.0.0",
+  "description": "Simple TOEIC dictation practice web app",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "fluent-ffmpeg": "^2.1.2",
+    "multer": "^2.0.2",
+    "uuid": "^9.0.1",
+    "wav": "^1.0.2"
+  }
+}

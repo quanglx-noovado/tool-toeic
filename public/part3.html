@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Part 3 - TOEIC Dictation</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="container dictation-container">
+        <a href="index.html" class="back-link">← Quay lại trang chủ</a>
+        
+        <h1>Part 3: Conversations</h1>
+        
+        <div class="instructions">
+            <p><strong>Hướng dẫn:</strong></p>
+            <p>1. Chọn file audio để nghe</p>
+            <p>2. Nghe và nhập text vào ô bên dưới</p>
+            <p>3. Sử dụng các nút điều khiển để play/pause/stop audio</p>
+        </div>
+
+        <div class="audio-controls">
+            <h2>Audio Player</h2>
+            <div class="audio-file-input">
+                <label for="audioSelect" style="display: block; margin-bottom: 10px; font-weight: 600;">Chọn file từ thư mục audio:</label>
+                <select id="audioSelect" style="width: 100%; max-width: 400px; padding: 10px; border: 2px solid #667eea; border-radius: 8px; font-size: 14px; margin-bottom: 15px;">
+                    <option value="">-- Đang tải... --</option>
+                </select>
+                <label for="audioFile" style="display: block; margin-bottom: 10px; font-weight: 600;">Hoặc upload file từ máy tính:</label>
+                <input type="file" id="audioFile" accept="audio/*">
+            </div>
+            <div class="audio-player">
+                <audio id="audioPlayer" controls></audio>
+            </div>
+            <div class="control-buttons">
+                <button class="btn btn-primary" id="playBtn">▶ Play</button>
+                <button class="btn btn-secondary" id="pauseBtn">⏸ Pause</button>
+                <button class="btn btn-secondary" id="stopBtn">⏹ Stop</button>
+                <button class="btn btn-success" id="resetBtn">🔄 Reset</button>
+            </div>
+        </div>
+
+        <div class="text-input-area">
+            <h3>Nhập từng câu trong cuộc hội thoại:</h3>
+            <div class="conversation-inputs" id="conversationInputs">
+                <div class="sentence-item">
+                    <div class="sentence-header">
+                        <label for="sentence1">Câu 1:</label>
+                        <button class="remove-sentence-btn" type="button">Xóa</button>
+                    </div>
+                    <input type="text" id="sentence1" placeholder="Nhập câu 1...">
+                </div>
+                <div class="sentence-item">
+                    <div class="sentence-header">
+                        <label for="sentence2">Câu 2:</label>
+                        <button class="remove-sentence-btn" type="button">Xóa</button>
+                    </div>
+                    <input type="text" id="sentence2" placeholder="Nhập câu 2...">
+                </div>
+            </div>
+            <button class="add-sentence-btn" id="addSentenceBtn">+ Thêm câu</button>
+        </div>
+    </div>
+
+    <script src="js/app.js"></script>
+</body>
+</html>
