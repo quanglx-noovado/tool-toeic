@@ -1,23 +1,39 @@
 // Common audio and text input functionality
 let audioElement = null;
 let currentAudioFile = null;
+let currentPlaybackRate = 1.0;
 
 // Load audio files from server
 async function loadAudioFiles() {
     const audioSelect = document.getElementById('audioSelect');
     if (!audioSelect) return;
 
+    // Detect part number from body data attribute
+    const body = document.body;
+    const partNumber = body.getAttribute('data-part');
+    
     try {
-        const response = await fetch('/api/audio-files');
+        // Use part-specific API if part number is available
+        const apiUrl = partNumber 
+            ? `/api/audio-files/${partNumber}` 
+            : '/api/audio-files';
+        
+        const response = await fetch(apiUrl);
         const files = await response.json();
         
         // Clear existing options except the first one
-        audioSelect.innerHTML = '<option value="">-- Chọn file từ thư mục audio --</option>';
+        const partLabel = partNumber 
+            ? `-- Chọn file từ thư mục part${partNumber} --` 
+            : '-- Chọn file từ thư mục audio --';
+        audioSelect.innerHTML = `<option value="">${partLabel}</option>`;
         
         if (files.length === 0) {
             const option = document.createElement('option');
             option.value = '';
-            option.textContent = 'Không có file audio trong thư mục';
+            const noFilesLabel = partNumber 
+                ? `Không có file audio trong thư mục part${partNumber}` 
+                : 'Không có file audio trong thư mục';
+            option.textContent = noFilesLabel;
             audioSelect.appendChild(option);
         } else {
             files.forEach(file => {
@@ -40,8 +56,13 @@ function initAudioPlayer() {
     const pauseBtn = document.getElementById('pauseBtn');
     const stopBtn = document.getElementById('stopBtn');
     const resetBtn = document.getElementById('resetBtn');
+    const speedSelect = document.getElementById('speedSelect');
 
     if (!audioPlayer) return;
+
+    // Set initial audio element and playback rate
+    audioElement = audioPlayer;
+    audioElement.playbackRate = currentPlaybackRate;
 
     // Load audio files from server
     loadAudioFiles();
@@ -53,6 +74,7 @@ function initAudioPlayer() {
             if (url) {
                 audioPlayer.src = url;
                 audioElement = audioPlayer;
+                audioElement.playbackRate = currentPlaybackRate;
                 // Clear file input
                 if (fileInput) fileInput.value = '';
             }
@@ -68,6 +90,7 @@ function initAudioPlayer() {
                 const url = URL.createObjectURL(file);
                 audioPlayer.src = url;
                 audioElement = audioPlayer;
+                audioElement.playbackRate = currentPlaybackRate;
                 // Clear select
                 if (audioSelect) audioSelect.value = '';
             }
@@ -112,6 +135,7 @@ function initAudioPlayer() {
             if (audioElement) {
                 audioElement.pause();
                 audioElement.currentTime = 0;
+                audioElement.playbackRate = 1.0;
             }
             
             // Reset conversation inputs to default (2 sentences) for Part 3 & 4
@@ -119,8 +143,60 @@ function initAudioPlayer() {
             if (conversationInputs) {
                 resetConversationInputs();
             }
+
+            // Reset speed select UI (if exists)
+            if (speedSelect) {
+                speedSelect.value = '1';
+            }
+
+            currentPlaybackRate = 1.0;
         });
     }
+
+    // Handle playback speed change
+    if (speedSelect) {
+        speedSelect.addEventListener('change', () => {
+            const rate = parseFloat(speedSelect.value);
+            if (!isNaN(rate) && audioElement) {
+                currentPlaybackRate = rate;
+                audioElement.playbackRate = rate;
+            }
+        });
+    }
+
+    // Global keyboard shortcuts
+    document.addEventListener('keydown', (e) => {
+        // Ignore if focused on input/textarea/select to avoid breaking typing
+        const tag = (e.target && e.target.tagName) ? e.target.tagName.toLowerCase() : '';
+        if (tag === 'input' || tag === 'textarea' || tag === 'select') {
+            return;
+        }
+
+        if (!audioElement) return;
+
+        // Space: play/pause
+        if (e.code === 'Space' || e.key === ' ') {
+            e.preventDefault();
+            if (audioElement.paused) {
+                audioElement.play();
+            } else {
+                audioElement.pause();
+            }
+        }
+
+        // Left/Right arrows: seek backward/forward 5 seconds
+        const SEEK_STEP = 5;
+        if (e.code === 'ArrowLeft' || e.key === 'ArrowLeft') {
+            e.preventDefault();
+            const newTime = Math.max(0, audioElement.currentTime - SEEK_STEP);
+            audioElement.currentTime = newTime;
+        }
+        if (e.code === 'ArrowRight' || e.key === 'ArrowRight') {
+            e.preventDefault();
+            const newTime = Math.min(audioElement.duration || audioElement.currentTime + SEEK_STEP, audioElement.currentTime + SEEK_STEP);
+            audioElement.currentTime = newTime;
+        }
+    });
 }
 
 // Handle add/remove sentences for Part 3 & 4

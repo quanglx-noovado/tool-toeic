@@ -60,7 +60,7 @@ app.use('/part2', express.static('audio/part2'));
 app.use('/part3', express.static('audio/part3'));
 app.use('/part4', express.static('audio/part4'));
 
-// API endpoint to list audio files
+// API endpoint to list audio files (root level - for backward compatibility)
 app.get('/api/audio-files', (req, res) => {
   const audioDir = path.join(__dirname, 'audio');
   
@@ -82,6 +82,36 @@ app.get('/api/audio-files', (req, res) => {
     res.json(audioFiles);
   } catch (error) {
     console.error('Error reading audio directory:', error);
+    res.json([]);
+  }
+});
+
+// API endpoint to list audio files by part number
+app.get('/api/audio-files/:part', (req, res) => {
+  const part = req.params.part;
+  const partDir = path.join(__dirname, 'audio', `part${part}`);
+  
+  // Check if part directory exists
+  if (!fs.existsSync(partDir)) {
+    return res.json([]);
+  }
+
+  try {
+    const files = fs.readdirSync(partDir);
+    const audioFiles = files.filter(file => {
+      const ext = path.extname(file).toLowerCase();
+      return ['.mp3', '.wav', '.m4a', '.ogg', '.aac', '.flac'].includes(ext);
+    }).map(file => ({
+      name: file,
+      url: `/part${part}/${file}`
+    }));
+    
+    // Sort files by name (to ensure question order)
+    audioFiles.sort((a, b) => a.name.localeCompare(b.name));
+    
+    res.json(audioFiles);
+  } catch (error) {
+    console.error(`Error reading part ${part} audio directory:`, error);
     res.json([]);
   }
 });
