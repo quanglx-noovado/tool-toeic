@@ -1,16 +1,24 @@
 <!DOCTYPE html>
 <html lang="vi">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TOEIC Dictation Practice</title>
     <link rel="stylesheet" href="css/style.css">
+    <script>
+        (function () {
+            const savedTheme = localStorage.getItem('dictation_theme') || 'light';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+        })();
+    </script>
 </head>
-<body>
+
+<body data-page="home">
     <div class="container">
         <h1>TOEIC Dictation Practice</h1>
         <p class="subtitle">Chọn phần bạn muốn luyện tập:</p>
-        
+
         <div class="parts-grid">
             <a href="part1.html" class="part-card">
                 <h2>Part 1</h2>
@@ -29,27 +37,32 @@
                 <p>Short Talks</p>
             </a>
         </div>
-        
+
         <div class="info">
             <p>📁 Đặt file audio của bạn vào thư mục <code>audio</code></p>
-            <div style="margin-top: 20px; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
-                <a href="split-part1.html" style="color: #667eea; font-weight: 600; text-decoration: none; padding: 10px; background: white; border-radius: 8px; text-align: center;">
-                    ✂️ Cắt Part 1
-                </a>
-                <a href="split-part2.html" style="color: #667eea; font-weight: 600; text-decoration: none; padding: 10px; background: white; border-radius: 8px; text-align: center;">
-                    ✂️ Cắt Part 2
-                </a>
-                <a href="split-part3.html" style="color: #667eea; font-weight: 600; text-decoration: none; padding: 10px; background: white; border-radius: 8px; text-align: center;">
-                    ✂️ Cắt Part 3
-                </a>
-                <a href="split-part4.html" style="color: #667eea; font-weight: 600; text-decoration: none; padding: 10px; background: white; border-radius: 8px; text-align: center;">
-                    ✂️ Cắt Part 4
-                </a>
-                <a href="split-full-lc.html" style="color: #28a745; font-weight: 600; text-decoration: none; padding: 10px; background: white; border-radius: 8px; text-align: center; border: 2px solid #28a745;">
-                    🚀 Cắt Full LC
-                </a>
+            <div class="split-grid">
+                <a href="split-part1.html" class="split-btn">✂️ Cắt Part 1</a>
+                <a href="split-part2.html" class="split-btn">✂️ Cắt Part 2</a>
+                <a href="split-part3.html" class="split-btn">✂️ Cắt Part 3</a>
+                <a href="split-part4.html" class="split-btn">✂️ Cắt Part 4</a>
+                <a href="split-full-lc.html" class="split-btn primary">🚀 Cắt Full LC</a>
+            </div>
+        </div>
+
+        <!-- Learning History Section -->
+        <div class="history-section" id="historySection"
+            style="display: none; margin-top: 32px; padding-top: 32px; border-top: 1px dashed var(--border-color);">
+            <h3 style="margin-bottom: 16px; color: var(--text-main);">Lịch sử luyện tập</h3>
+            <div id="historyList" class="history-grid">
+                <!-- History items filled by app.js -->
             </div>
         </div>
     </div>
+
+    <!-- Theme Toggle -->
+    <button class="theme-toggle">🌙</button>
+
+    <script src="js/app.js"></script>
 </body>
+
 </html>
